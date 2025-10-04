@@ -52,7 +52,7 @@
             android:id="@+id/easy"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="196dp"
+            android:layout_marginTop="256dp"
             android:backgroundTint="@color/white"
             android:onClick="startGame"
             android:paddingHorizontal="40dp"
@@ -75,59 +75,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/easy"/>
-
-        <Button
-            android:id="@+id/medium"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
-            android:onClick="startGame"
-            android:paddingHorizontal="40dp"
-            android:paddingVertical="5dp"
-            android:layout_marginVertical="10sp"
-            android:text="Medium"
-            android:textColor="#0E1E35"
-            android:textSize="40sp"
-            app:cornerRadius="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textEasy" />
-
-        <TextView
-            android:id="@+id/textMid"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Solve a grid of 5X4 blocks"
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/medium"/>
-
-        <Button
-            android:id="@+id/hard"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
-            android:onClick="startGame"
-            android:paddingHorizontal="40dp"
-            android:paddingVertical="5dp"
-            android:layout_marginVertical="10sp"
-            android:text="Hard"
-            android:textColor="#0E1E35"
-            android:textSize="40sp"
-            app:cornerRadius="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textMid" />
-        <TextView
-            android:id="@+id/textHard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Solve a grid of 6X5 blocks"
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/hard"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,11 +1,9 @@
 package com.example.memorytilegame.levels;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -16,7 +14,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.memorytilegame.MainActivity;
 import com.example.memorytilegame.R;
 import com.example.memorytilegame.adapter.LevelAdapter;
 
@@ -31,9 +28,9 @@ public class GameActivity extends AppCompatActivity {
     View blackOverlay, touchInterceptor;
     Handler handler;
     Runnable timerRunnable;
-    long startTime, elapsedTime;
-    boolean isCountdownFinished = false;
-    Button resumeTimer;
+    long startTime, elapsedTime; // elapsedTime kept for future pause implementation
+    boolean isCountdownFinished = false; // kept for countdown flow
+    Button resumeTimer; // kept so UI remains available for future work
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,18 +60,18 @@ public class GameActivity extends AppCompatActivity {
                 R.drawable.i3, R.drawable.i3,
                 R.drawable.i4, R.drawable.i4,
                 R.drawable.i5, R.drawable.i5,
-                R.drawable.i6, R.drawable.i6,
-                R.drawable.i7, R.drawable.i7,
-                R.drawable.i8, R.drawable.i8,
-                R.drawable.i9, R.drawable.i9,
-                R.drawable.i10, R.drawable.i10,
-                R.drawable.i11, R.drawable.i11,
-                R.drawable.i12, R.drawable.i12,
-                R.drawable.i13, R.drawable.i13,
-                R.drawable.i14, R.drawable.i14,
-                R.drawable.i15, R.drawable.i15);
+                R.drawable.i6, R.drawable.i6
+        );
 
-        LevelAdapter adapter = new LevelAdapter(this, arrayList.subList(0, index), recyclerView, winGame, noOfCols, timerTextView, pause);
+        LevelAdapter adapter = new LevelAdapter(
+                this,
+                arrayList.subList(0, index),
+                recyclerView,
+                winGame,
+                noOfCols,
+                timerTextView,
+                pause // passed through for future contributors; no logic here
+        );
         recyclerView.setLayoutManager(new GridLayoutManager(this, noOfCols));
         recyclerView.setAdapter(adapter);
 
@@ -95,45 +92,8 @@ public class GameActivity extends AppCompatActivity {
         goBackFromGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(timerTextView.getVisibility() == View.GONE) {
-                    startActivity(new Intent(GameActivity.this, LevelsScreen.class));
-                    finish();
-                }
-                else pauseGame();
-            }
-        });
-
-        pause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                blackOverlay.setVisibility(View.VISIBLE);
-                touchInterceptor.setVisibility(View.VISIBLE);
-                countdown.setVisibility(View.VISIBLE);
-                countdown.setText("Paused!");
-
-                // Save the elapsed time
-                elapsedTime += System.currentTimeMillis() - startTime;
-                stopTimer();
-
-                resumeTimer.setVisibility(View.VISIBLE);
-                resumeTimer.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        startAnimation(view);
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                blackOverlay.setVisibility(View.GONE);
-                                touchInterceptor.setVisibility(View.GONE);
-                                countdown.setVisibility(View.GONE);
-                                startTimer(); // Start the timer without resetting elapsedTime
-
-                                resumeTimer.setVisibility(View.GONE);
-                            }
-                        }, 100);
-
-                    }
-                });
+                startActivity(new Intent(GameActivity.this, LevelsScreen.class));
+                finish();
             }
         });
     }
@@ -179,60 +139,16 @@ public class GameActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        if (isCountdownFinished) {
-            elapsedTime += System.currentTimeMillis() - startTime;
-            stopTimer();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (isCountdownFinished) {
-            startTimer(); // Start the timer without resetting elapsedTime
-        }
-    }
-
-    public void pauseGame() {
-
-        elapsedTime += System.currentTimeMillis() - startTime;
-        stopTimer();
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this)
-                .setTitle("Go Back?")
-                .setMessage("All your progress will be lost")
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        startActivity(new Intent(GameActivity.this, LevelsScreen.class));
-                        finish();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // Dismiss the dialog and resume the timer
-                        dialogInterface.dismiss();
-                        startTimer(); // Continue the timer from where it left off
-                    }
-                });
-        builder.show();
-    }
-
-    @Override
     public void onBackPressed() {
-        if(timerTextView.getVisibility() == View.GONE) {
+        if (timerTextView.getVisibility() == View.GONE) {
             startActivity(new Intent(GameActivity.this, LevelsScreen.class));
             finish();
+        } else {
+            finish();
         }
-        else if(resumeTimer.getVisibility() == View.GONE) pauseGame();
-        else finish();
     }
 
-    public void startAnimation(View v){
+    public void startAnimation(View v) {
         v.animate()
                 .scaleX(0.95f)
                 .scaleY(0.95f)
